@@ -3,7 +3,7 @@ var c = canvas.getContext("2d");
 var w = canvas.width;
 var h = canvas.height;
 
-var ball = { x: w/2, y: h/2, r: w/20};
+var ball = { x: w/2, y: h/2, vx:0, vy:0, r: w/20};
 
 
 
@@ -21,8 +21,15 @@ function analyseSound(timestamp) {
 		c.clearRect(0,0,w,h);
 		c.beginPath();
 		c.fillStyle = "#FC284F";
+		var imin = 0;
+		var imax = 250;
+		var sum = 0;
 		for(var i in frequencyData){
 			var freq = frequencyData[i];
+
+			if(i>=imin && i<imax)
+				sum += freq;
+
 			c.beginPath();
 			c.fillRect(
 				w*i/frequencyData.length,
@@ -31,6 +38,8 @@ function analyseSound(timestamp) {
 				freq
 			);
 		}
+		var avg = sum/(imax-imin)
+		ball.r = 50+avg*0.5;
 		c.beginPath();
 		c.fillStyle = "rgba(0,0,0,0.5)";
 		c.arc(ball.x, ball.y, ball.r, 0, Math.PI*2, true);
